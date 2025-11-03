@@ -56,7 +56,7 @@ class TestVarasto(unittest.TestCase):
         self.assertAlmostEqual(self.varasto.paljonko_mahtuu(), 10)
 
     def test_ottaminen_paljon_lisaa_tilaa(self):
-        self.varasto.lisaa_varastoon(999)
+        self.varasto.lisaa_varastoon(999) # enemmän kuin tilavuus
         self.assertAlmostEqual(self.varasto.paljonko_mahtuu(), 0)
 
     def test_ottaminen_ota_negatiivinen_maara(self):

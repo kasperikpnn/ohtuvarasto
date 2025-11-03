@@ -65,7 +65,7 @@ class TestVarasto(unittest.TestCase):
 
     def test_ottaminen_ota_liian_iso_maara(self):
         self.varasto.lisaa_varastoon(10)
-        self.assertAlmostEqual(self.varasto.ota_varastosta(999), 10)
+        self.assertAlmostEqual(self.varasto.ota_varastosta(999), 10000)
 
     def test_str(self):
         self.assertAlmostEqual(str(self.varasto), f"saldo = {self.varasto.saldo}, vielä tilaa {self.varasto.paljonko_mahtuu()}")

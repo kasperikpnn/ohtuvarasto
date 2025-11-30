@@ -1,8 +1,9 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for, flash
 from varasto import Varasto
 
 app = Flask(__name__)
-app.secret_key = 'retro-warehouse-2000s-secret-key'
+app.secret_key = os.environ.get('SECRET_KEY', os.urandom(24))
 
 # Store warehouses in memory with names
 warehouses = {}
@@ -34,6 +35,14 @@ def create_warehouse():
 
         if capacity <= 0:
             flash('Capacity must be greater than 0!', 'error')
+            return render_template('create_warehouse.html')
+
+        if initial_stock < 0:
+            flash('Initial stock cannot be negative!', 'error')
+            return render_template('create_warehouse.html')
+
+        if initial_stock > capacity:
+            flash('Initial stock cannot exceed capacity!', 'error')
             return render_template('create_warehouse.html')
 
         warehouse_counter += 1
@@ -153,4 +162,5 @@ def delete_warehouse(warehouse_id):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    debug_mode = os.environ.get('FLASK_DEBUG', 'false').lower() == 'true'
+    app.run(debug=debug_mode)

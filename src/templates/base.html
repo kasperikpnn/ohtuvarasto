@@ -252,6 +252,21 @@
             display: inline-block;
             margin: 0 10px;
         }
+
+        /* Accessibility: Respect user's motion preferences */
+        @media (prefers-reduced-motion: reduce) {
+            .banner {
+                animation: none;
+            }
+            .blink {
+                animation: none;
+            }
+            marquee {
+                animation: none;
+                overflow: visible;
+                white-space: normal;
+            }
+        }
     </style>
 </head>
 <body>

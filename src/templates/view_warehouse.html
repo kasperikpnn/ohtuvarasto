@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}{{ warehouse.name }} - Warehouse Manager 2000{% endblock %}
+
+{% block content %}
+<h2>🏭 {{ warehouse.name }} 🏭</h2>
+
+<div style="text-align: center; margin-bottom: 20px;">
+    <a href="{{ url_for('edit_warehouse', warehouse_id=warehouse_id) }}" class="btn">✏️ Edit Name</a>
+    <form method="POST" action="{{ url_for('delete_warehouse', warehouse_id=warehouse_id) }}" style="display: inline;">
+        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this warehouse? This cannot be undone!');">
+            🗑️ Delete Warehouse
+        </button>
+    </form>
+</div>
+
+<!-- Warehouse Status -->
+<div style="background: linear-gradient(180deg, #e6f3ff, #cce6ff); border: 3px ridge #0066cc; padding: 20px; margin-bottom: 20px;">
+    <h3 style="color: #003366; text-align: center; margin-top: 0;">📊 Warehouse Status</h3>
+    
+    <table style="margin: 0 auto;">
+        <tr>
+            <th>Property</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <td><strong>📦 Current Stock</strong></td>
+            <td>{{ "%.2f"|format(warehouse.varasto.saldo) }} units</td>
+        </tr>
+        <tr>
+            <td><strong>📐 Total Capacity</strong></td>
+            <td>{{ "%.2f"|format(warehouse.varasto.tilavuus) }} units</td>
+        </tr>
+        <tr>
+            <td><strong>📭 Available Space</strong></td>
+            <td>{{ "%.2f"|format(warehouse.varasto.paljonko_mahtuu()) }} units</td>
+        </tr>
+    </table>
+
+    {% set fill_percent = (warehouse.varasto.saldo / warehouse.varasto.tilavuus * 100) if warehouse.varasto.tilavuus > 0 else 0 %}
+    <div style="margin-top: 20px;">
+        <p style="text-align: center; color: #003366; font-weight: bold;">Fill Level: {{ "%.1f"|format(fill_percent) }}%</p>
+        <div class="progress-bar" style="max-width: 400px; margin: 0 auto;">
+            <div class="progress-fill" style="width: {{ fill_percent }}%;"></div>
+        </div>
+    </div>
+
+    {% if fill_percent >= 90 %}
+    <p style="text-align: center; color: #ff0000; font-weight: bold; margin-top: 15px;">
+        <span class="blink">⚠️</span> WARNING: Warehouse is almost full! <span class="blink">⚠️</span>
+    </p>
+    {% elif fill_percent <= 10 %}
+    <p style="text-align: center; color: #ff6600; font-weight: bold; margin-top: 15px;">
+        📢 Notice: Warehouse is running low on stock!
+    </p>
+    {% endif %}
+</div>
+
+<!-- Add Items Section -->
+<div style="background: linear-gradient(180deg, #e6ffe6, #ccffcc); border: 3px ridge #00cc00; padding: 20px; margin-bottom: 20px;">
+    <h3 style="color: #006600; text-align: center; margin-top: 0;">➕ Add Items to Warehouse</h3>
+    <form method="POST" action="{{ url_for('add_to_warehouse', warehouse_id=warehouse_id) }}" style="text-align: center;">
+        <div class="form-group">
+            <label for="add_amount" style="color: #006600;">Amount to Add:</label>
+            <input type="number" id="add_amount" name="amount" step="0.01" min="0.01" required placeholder="Enter amount..." style="width: 200px;">
+        </div>
+        <button type="submit" class="btn btn-success">📥 ADD TO WAREHOUSE</button>
+    </form>
+    <p style="text-align: center; color: #666666; font-size: 12px; margin-top: 10px;">
+        Available space: {{ "%.2f"|format(warehouse.varasto.paljonko_mahtuu()) }} units
+    </p>
+</div>
+
+<!-- Remove Items Section -->
+<div style="background: linear-gradient(180deg, #ffe6e6, #ffcccc); border: 3px ridge #cc0000; padding: 20px; margin-bottom: 20px;">
+    <h3 style="color: #660000; text-align: center; margin-top: 0;">➖ Remove Items from Warehouse</h3>
+    <form method="POST" action="{{ url_for('remove_from_warehouse', warehouse_id=warehouse_id) }}" style="text-align: center;">
+        <div class="form-group">
+            <label for="remove_amount" style="color: #660000;">Amount to Remove:</label>
+            <input type="number" id="remove_amount" name="amount" step="0.01" min="0.01" required placeholder="Enter amount..." style="width: 200px;">
+        </div>
+        <button type="submit" class="btn btn-danger">📤 REMOVE FROM WAREHOUSE</button>
+    </form>
+    <p style="text-align: center; color: #666666; font-size: 12px; margin-top: 10px;">
+        Current stock: {{ "%.2f"|format(warehouse.varasto.saldo) }} units
+    </p>
+</div>
+
+<p style="text-align: center;">
+    <a href="{{ url_for('index') }}" class="btn btn-primary" style="font-size: 18px; padding: 15px 30px;">
+        ⬅️ Back to All Warehouses
+    </a>
+</p>
+
+<div style="margin-top: 30px; text-align: center; padding: 15px; background-color: #fff0f5; border: 2px dotted #ff69b4;">
+    <p style="color: #ff1493; margin: 0;">
+        <span class="gif-decoration">💝</span>
+        Thanks for using Warehouse Manager 2000!
+        <span class="gif-decoration">💝</span>
+    </p>
+</div>
+{% endblock %}

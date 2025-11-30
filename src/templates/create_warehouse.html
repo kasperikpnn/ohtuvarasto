@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Create New Warehouse - Warehouse Manager 2000{% endblock %}
+
+{% block content %}
+<h2>🏗️ Create New Warehouse 🏗️</h2>
+
+<div style="text-align: center; margin-bottom: 20px;">
+    <span class="gif-decoration">📦</span>
+    <span style="color: #ff00ff; font-weight: bold; font-size: 20px;">Build Your Empire!</span>
+    <span class="gif-decoration">📦</span>
+</div>
+
+<form method="POST" action="{{ url_for('create_warehouse') }}">
+    <div class="form-group">
+        <label for="name">🏷️ Warehouse Name:</label>
+        <input type="text" id="name" name="name" required placeholder="Enter warehouse name..." style="width: 100%; max-width: 400px;">
+    </div>
+
+    <div class="form-group">
+        <label for="capacity">📐 Capacity (maximum amount it can hold):</label>
+        <input type="number" id="capacity" name="capacity" step="0.01" min="0.01" required placeholder="e.g., 100" style="width: 200px;">
+    </div>
+
+    <div class="form-group">
+        <label for="initial_stock">📊 Initial Stock (starting amount, optional):</label>
+        <input type="number" id="initial_stock" name="initial_stock" step="0.01" min="0" value="0" style="width: 200px;">
+    </div>
+
+    <div style="text-align: center; margin-top: 30px; padding: 20px; background: linear-gradient(180deg, #ffffcc, #ffff99); border: 3px ridge #808080;">
+        <button type="submit" class="btn btn-success" style="font-size: 20px; padding: 15px 40px;">
+            ✨ CREATE WAREHOUSE ✨
+        </button>
+    </div>
+</form>
+
+<p style="text-align: center; margin-top: 20px;">
+    <a href="{{ url_for('index') }}" class="btn">⬅️ Back to Home</a>
+</p>
+
+<div style="margin-top: 30px; padding: 15px; background-color: #e0ffff; border: 2px solid #00ced1;">
+    <p style="color: #008b8b; margin: 0;">
+        <strong>📝 Note:</strong> Capacity must be greater than 0. Initial stock cannot exceed capacity!
+    </p>
+</div>
+{% endblock %}

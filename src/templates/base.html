@@ -267,9 +267,258 @@
                 white-space: normal;
             }
         }
+
+        /* Audio controls styling */
+        .audio-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(180deg, #c0c0c0, #808080);
+            border: 3px outset #ffffff;
+            padding: 10px;
+            z-index: 1000;
+            font-size: 12px;
+            color: #000000;
+        }
+
+        .audio-controls button {
+            background: linear-gradient(180deg, #e0e0e0, #a0a0a0);
+            border: 2px outset #ffffff;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-family: 'Comic Sans MS', cursive;
+            margin: 2px;
+        }
+
+        .audio-controls button:active {
+            border-style: inset;
+        }
+
+        .audio-controls label {
+            display: block;
+            margin-bottom: 5px;
+            color: #000080;
+        }
     </style>
 </head>
 <body>
+    <!-- Retro Audio Controls -->
+    <div class="audio-controls">
+        <label>🎵 Music Controls</label>
+        <button onclick="toggleMusic()" id="musicBtn">▶️ Play Music</button>
+        <button onclick="toggleSounds()" id="soundBtn">🔊 Sounds ON</button>
+    </div>
+
+    <script>
+        // Web Audio API for retro keygen-style music
+        let audioContext = null;
+        let musicPlaying = false;
+        let soundsEnabled = true;
+        let currentOscillators = [];
+
+        // Initialize audio context on user interaction
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        // Keygen-style chiptune music generator
+        function playKeygenMusic() {
+            initAudio();
+            
+            const tempo = 140;
+            const beatDuration = 60 / tempo;
+            
+            // Arpeggio patterns (classic keygen style)
+            const patterns = [
+                [261.63, 329.63, 392.00, 523.25], // C major arpeggio
+                [293.66, 369.99, 440.00, 587.33], // D major
+                [246.94, 311.13, 369.99, 493.88], // B minor
+                [220.00, 277.18, 329.63, 440.00], // A minor
+            ];
+
+            let time = audioContext.currentTime;
+            let patternIndex = 0;
+            
+            function scheduleNotes() {
+                if (!musicPlaying) return;
+                
+                const pattern = patterns[patternIndex % patterns.length];
+                
+                for (let i = 0; i < 16; i++) {
+                    const noteIndex = i % pattern.length;
+                    const freq = pattern[noteIndex];
+                    
+                    // Main oscillator (square wave for that chiptune sound)
+                    const osc = audioContext.createOscillator();
+                    const gain = audioContext.createGain();
+                    
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(freq, time + (i * beatDuration / 4));
+                    
+                    gain.gain.setValueAtTime(0.1, time + (i * beatDuration / 4));
+                    gain.gain.exponentialRampToValueAtTime(0.01, time + (i * beatDuration / 4) + beatDuration / 8);
+                    
+                    osc.connect(gain);
+                    gain.connect(audioContext.destination);
+                    
+                    osc.start(time + (i * beatDuration / 4));
+                    osc.stop(time + (i * beatDuration / 4) + beatDuration / 4);
+                    
+                    currentOscillators.push(osc);
+                }
+                
+                // Bass line
+                const bassFreqs = [65.41, 73.42, 61.74, 55.00];
+                for (let i = 0; i < 4; i++) {
+                    const bassOsc = audioContext.createOscillator();
+                    const bassGain = audioContext.createGain();
+                    
+                    bassOsc.type = 'sawtooth';
+                    bassOsc.frequency.setValueAtTime(bassFreqs[patternIndex % 4], time + (i * beatDuration));
+                    
+                    bassGain.gain.setValueAtTime(0.08, time + (i * beatDuration));
+                    bassGain.gain.exponentialRampToValueAtTime(0.01, time + (i * beatDuration) + beatDuration * 0.8);
+                    
+                    bassOsc.connect(bassGain);
+                    bassGain.connect(audioContext.destination);
+                    
+                    bassOsc.start(time + (i * beatDuration));
+                    bassOsc.stop(time + (i * beatDuration) + beatDuration);
+                    
+                    currentOscillators.push(bassOsc);
+                }
+                
+                patternIndex++;
+                time += beatDuration * 4;
+                
+                if (musicPlaying) {
+                    setTimeout(scheduleNotes, beatDuration * 4 * 1000 - 100);
+                }
+            }
+            
+            scheduleNotes();
+        }
+
+        function stopMusic() {
+            musicPlaying = false;
+            currentOscillators.forEach(osc => {
+                try { osc.stop(); } catch(e) {}
+            });
+            currentOscillators = [];
+        }
+
+        function toggleMusic() {
+            const btn = document.getElementById('musicBtn');
+            if (musicPlaying) {
+                stopMusic();
+                btn.textContent = '▶️ Play Music';
+            } else {
+                musicPlaying = true;
+                playKeygenMusic();
+                btn.textContent = '⏹️ Stop Music';
+            }
+        }
+
+        function toggleSounds() {
+            const btn = document.getElementById('soundBtn');
+            soundsEnabled = !soundsEnabled;
+            btn.textContent = soundsEnabled ? '🔊 Sounds ON' : '🔇 Sounds OFF';
+        }
+
+        // Retro click sound effect
+        function playClickSound() {
+            if (!soundsEnabled) return;
+            initAudio();
+            
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(800, audioContext.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.1);
+            
+            gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+            
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            
+            osc.start(audioContext.currentTime);
+            osc.stop(audioContext.currentTime + 0.1);
+        }
+
+        // Success sound (higher pitch, happier)
+        function playSuccessSound() {
+            if (!soundsEnabled) return;
+            initAudio();
+            
+            const freqs = [523.25, 659.25, 783.99];
+            freqs.forEach((freq, i) => {
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(freq, audioContext.currentTime + i * 0.1);
+                
+                gain.gain.setValueAtTime(0.2, audioContext.currentTime + i * 0.1);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + i * 0.1 + 0.15);
+                
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+                
+                osc.start(audioContext.currentTime + i * 0.1);
+                osc.stop(audioContext.currentTime + i * 0.1 + 0.15);
+            });
+        }
+
+        // Error sound (lower pitch, descending)
+        function playErrorSound() {
+            if (!soundsEnabled) return;
+            initAudio();
+            
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(400, audioContext.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(100, audioContext.currentTime + 0.3);
+            
+            gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            
+            osc.start(audioContext.currentTime);
+            osc.stop(audioContext.currentTime + 0.3);
+        }
+
+        // Add click sounds to all buttons and links
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click sound to buttons
+            document.querySelectorAll('button, .btn, input[type="submit"]').forEach(function(el) {
+                el.addEventListener('click', playClickSound);
+            });
+            
+            // Add click sound to links
+            document.querySelectorAll('a').forEach(function(el) {
+                el.addEventListener('click', playClickSound);
+            });
+
+            // Play success/error sounds based on flash messages
+            const successFlash = document.querySelector('.flash-success');
+            const errorFlash = document.querySelector('.flash-error');
+            
+            if (successFlash) {
+                setTimeout(playSuccessSound, 100);
+            }
+            if (errorFlash) {
+                setTimeout(playErrorSound, 100);
+            }
+        });
+    </script>
     <div class="banner">
         <h1>🏭 WAREHOUSE MANAGER 2000 🏭</h1>
         <marquee behavior="scroll" direction="left" scrollamount="5">

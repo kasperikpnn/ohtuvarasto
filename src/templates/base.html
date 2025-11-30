@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Warehouse Manager 2000{% endblock %}</title>
+    <style>
+        /* Early 2000s Retro Styling */
+        body {
+            background-color: #000080;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="%23000066" width="50" height="50"/><rect fill="%23000080" x="50" width="50" height="50"/><rect fill="%23000080" y="50" width="50" height="50"/><rect fill="%23000066" x="50" y="50" width="50" height="50"/></svg>');
+            font-family: 'Comic Sans MS', 'Chalkboard SE', cursive;
+            color: #ffff00;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .banner {
+            background: linear-gradient(90deg, #ff0000, #ff7700, #ffff00, #00ff00, #0000ff, #8b00ff);
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 5px ridge #silver;
+            animation: rainbow 3s linear infinite;
+        }
+
+        @keyframes rainbow {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        .banner h1 {
+            font-size: 48px;
+            color: #000000;
+            text-shadow: 3px 3px #ff00ff, -3px -3px #00ffff;
+            margin: 0;
+            font-family: 'Impact', sans-serif;
+        }
+
+        .banner marquee {
+            color: #ff0000;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .container {
+            background-color: #c0c0c0;
+            border: 5px outset #ffffff;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 10px 10px 0 #000000;
+        }
+
+        .container h2 {
+            color: #000080;
+            text-align: center;
+            border-bottom: 3px double #000080;
+            padding-bottom: 10px;
+            font-family: 'Times New Roman', serif;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #ffffff;
+            border: 3px ridge #808080;
+        }
+
+        th {
+            background: linear-gradient(180deg, #0000ff, #000080);
+            color: #ffffff;
+            padding: 10px;
+            border: 2px solid #000000;
+            font-family: 'Arial Black', sans-serif;
+        }
+
+        td {
+            padding: 10px;
+            border: 2px solid #808080;
+            color: #000000;
+            text-align: center;
+        }
+
+        tr:nth-child(even) {
+            background-color: #e0e0e0;
+        }
+
+        tr:hover {
+            background-color: #ffff99;
+        }
+
+        a {
+            color: #0000ff;
+            text-decoration: underline;
+        }
+
+        a:visited {
+            color: #800080;
+        }
+
+        a:hover {
+            color: #ff0000;
+            text-decoration: none;
+        }
+
+        .btn {
+            background: linear-gradient(180deg, #e0e0e0, #808080);
+            border: 3px outset #ffffff;
+            padding: 10px 20px;
+            font-family: 'Comic Sans MS', cursive;
+            font-size: 16px;
+            color: #000000;
+            cursor: pointer;
+            margin: 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: linear-gradient(180deg, #808080, #e0e0e0);
+            border-style: inset;
+        }
+
+        .btn:active {
+            border-style: inset;
+        }
+
+        .btn-danger {
+            background: linear-gradient(180deg, #ff6666, #cc0000);
+            color: #ffffff;
+        }
+
+        .btn-success {
+            background: linear-gradient(180deg, #66ff66, #00cc00);
+        }
+
+        .btn-primary {
+            background: linear-gradient(180deg, #6666ff, #0000cc);
+            color: #ffffff;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            border: 2px inset #808080;
+            padding: 8px;
+            font-family: 'Comic Sans MS', cursive;
+            font-size: 14px;
+            background-color: #ffffff;
+        }
+
+        .form-group {
+            margin: 15px 0;
+        }
+
+        label {
+            color: #000080;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+
+        .flash {
+            padding: 15px;
+            border: 3px ridge #808080;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .flash-success {
+            background-color: #90ee90;
+            color: #006400;
+        }
+
+        .flash-error {
+            background-color: #ffcccb;
+            color: #8b0000;
+        }
+
+        .flash-warning {
+            background-color: #fffacd;
+            color: #8b8000;
+        }
+
+        .guestbook {
+            font-size: 12px;
+            color: #ff00ff;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .under-construction {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background-color: #ffffff;
+            border: 2px inset #808080;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff00, #ffff00, #ff0000);
+            transition: width 0.3s;
+        }
+
+        .blink {
+            animation: blink 1s linear infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .sparkle {
+            color: #ffff00;
+            text-shadow: 0 0 10px #ffff00, 0 0 20px #ffff00;
+        }
+
+        .counter {
+            font-family: 'Courier New', monospace;
+            background-color: #000000;
+            color: #00ff00;
+            padding: 5px 15px;
+            border: 2px groove #808080;
+            display: inline-block;
+            margin: 10px 0;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            border-top: 3px ridge #808080;
+            color: #000080;
+        }
+
+        .email-link {
+            font-size: 14px;
+        }
+
+        .gif-decoration {
+            display: inline-block;
+            margin: 0 10px;
+        }
+
+        /* Accessibility: Respect user's motion preferences */
+        @media (prefers-reduced-motion: reduce) {
+            .banner {
+                animation: none;
+            }
+            .blink {
+                animation: none;
+            }
+            marquee {
+                animation: none;
+                overflow: visible;
+                white-space: normal;
+            }
+        }
+
+        /* Audio controls styling */
+        .audio-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(180deg, #c0c0c0, #808080);
+            border: 3px outset #ffffff;
+            padding: 10px;
+            z-index: 1000;
+            font-size: 12px;
+            color: #000000;
+        }
+
+        .audio-controls button {
+            background: linear-gradient(180deg, #e0e0e0, #a0a0a0);
+            border: 2px outset #ffffff;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-family: 'Comic Sans MS', cursive;
+            margin: 2px;
+        }
+
+        .audio-controls button:active {
+            border-style: inset;
+        }
+
+        .audio-controls label {
+            display: block;
+            margin-bottom: 5px;
+            color: #000080;
+        }
+    </style>
+</head>
+<body>
+    <!-- Retro Audio Controls -->
+    <div class="audio-controls">
+        <label>🎵 Music Controls</label>
+        <button onclick="toggleMusic()" id="musicBtn">▶️ Play Music</button>
+        <button onclick="toggleSounds()" id="soundBtn">🔊 Sounds ON</button>
+    </div>
+
+    <script>
+        // Web Audio API for retro keygen-style music
+        let audioContext = null;
+        let musicPlaying = false;
+        let soundsEnabled = true;
+        let currentOscillators = [];
+
+        // Initialize audio context on user interaction
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        // Keygen-style chiptune music generator
+        function playKeygenMusic() {
+            initAudio();
+            
+            const tempo = 140;
+            const beatDuration = 60 / tempo;
+            
+            // Arpeggio patterns (classic keygen style)
+            const patterns = [
+                [261.63, 329.63, 392.00, 523.25], // C major arpeggio
+                [293.66, 369.99, 440.00, 587.33], // D major
+                [246.94, 311.13, 369.99, 493.88], // B minor
+                [220.00, 277.18, 329.63, 440.00], // A minor
+            ];
+
+            let time = audioContext.currentTime;
+            let patternIndex = 0;
+            
+            function scheduleNotes() {
+                if (!musicPlaying) return;
+                
+                const pattern = patterns[patternIndex % patterns.length];
+                
+                for (let i = 0; i < 16; i++) {
+                    const noteIndex = i % pattern.length;
+                    const freq = pattern[noteIndex];
+                    
+                    // Main oscillator (square wave for that chiptune sound)
+                    const osc = audioContext.createOscillator();
+                    const gain = audioContext.createGain();
+                    
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(freq, time + (i * beatDuration / 4));
+                    
+                    gain.gain.setValueAtTime(0.1, time + (i * beatDuration / 4));
+                    gain.gain.exponentialRampToValueAtTime(0.01, time + (i * beatDuration / 4) + beatDuration / 8);
+                    
+                    osc.connect(gain);
+                    gain.connect(audioContext.destination);
+                    
+                    osc.start(time + (i * beatDuration / 4));
+                    osc.stop(time + (i * beatDuration / 4) + beatDuration / 4);
+                    
+                    currentOscillators.push(osc);
+                }
+                
+                // Bass line
+                const bassFreqs = [65.41, 73.42, 61.74, 55.00];
+                for (let i = 0; i < 4; i++) {
+                    const bassOsc = audioContext.createOscillator();
+                    const bassGain = audioContext.createGain();
+                    
+                    bassOsc.type = 'sawtooth';
+                    bassOsc.frequency.setValueAtTime(bassFreqs[patternIndex % 4], time + (i * beatDuration));
+                    
+                    bassGain.gain.setValueAtTime(0.08, time + (i * beatDuration));
+                    bassGain.gain.exponentialRampToValueAtTime(0.01, time + (i * beatDuration) + beatDuration * 0.8);
+                    
+                    bassOsc.connect(bassGain);
+                    bassGain.connect(audioContext.destination);
+                    
+                    bassOsc.start(time + (i * beatDuration));
+                    bassOsc.stop(time + (i * beatDuration) + beatDuration);
+                    
+                    currentOscillators.push(bassOsc);
+                }
+                
+                patternIndex++;
+                time += beatDuration * 4;
+                
+                if (musicPlaying) {
+                    setTimeout(scheduleNotes, beatDuration * 4 * 1000 - 100);
+                }
+            }
+            
+            scheduleNotes();
+        }
+
+        function stopMusic() {
+            musicPlaying = false;
+            currentOscillators.forEach(osc => {
+                try { osc.stop(); } catch(e) {}
+            });
+            currentOscillators = [];
+        }
+
+        function toggleMusic() {
+            const btn = document.getElementById('musicBtn');
+            if (musicPlaying) {
+                stopMusic();
+                btn.textContent = '▶️ Play Music';
+            } else {
+                musicPlaying = true;
+                playKeygenMusic();
+                btn.textContent = '⏹️ Stop Music';
+            }
+        }
+
+        function toggleSounds() {
+            const btn = document.getElementById('soundBtn');
+            soundsEnabled = !soundsEnabled;
+            btn.textContent = soundsEnabled ? '🔊 Sounds ON' : '🔇 Sounds OFF';
+        }
+
+        // Retro click sound effect
+        function playClickSound() {
+            if (!soundsEnabled) return;
+            initAudio();
+            
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(800, audioContext.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.1);
+            
+            gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+            
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            
+            osc.start(audioContext.currentTime);
+            osc.stop(audioContext.currentTime + 0.1);
+        }
+
+        // Success sound (higher pitch, happier)
+        function playSuccessSound() {
+            if (!soundsEnabled) return;
+            initAudio();
+            
+            const freqs = [523.25, 659.25, 783.99];
+            freqs.forEach((freq, i) => {
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(freq, audioContext.currentTime + i * 0.1);
+                
+                gain.gain.setValueAtTime(0.2, audioContext.currentTime + i * 0.1);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + i * 0.1 + 0.15);
+                
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+                
+                osc.start(audioContext.currentTime + i * 0.1);
+                osc.stop(audioContext.currentTime + i * 0.1 + 0.15);
+            });
+        }
+
+        // Error sound (lower pitch, descending)
+        function playErrorSound() {
+            if (!soundsEnabled) return;
+            initAudio();
+            
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(400, audioContext.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(100, audioContext.currentTime + 0.3);
+            
+            gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            
+            osc.start(audioContext.currentTime);
+            osc.stop(audioContext.currentTime + 0.3);
+        }
+
+        // Add click sounds to all buttons and links
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click sound to buttons
+            document.querySelectorAll('button, .btn, input[type="submit"]').forEach(function(el) {
+                el.addEventListener('click', playClickSound);
+            });
+            
+            // Add click sound to links
+            document.querySelectorAll('a').forEach(function(el) {
+                el.addEventListener('click', playClickSound);
+            });
+
+            // Play success/error sounds based on flash messages
+            const successFlash = document.querySelector('.flash-success');
+            const errorFlash = document.querySelector('.flash-error');
+            
+            if (successFlash) {
+                setTimeout(playSuccessSound, 100);
+            }
+            if (errorFlash) {
+                setTimeout(playErrorSound, 100);
+            }
+        });
+    </script>
+    <div class="banner">
+        <h1>🏭 WAREHOUSE MANAGER 2000 🏭</h1>
+        <marquee behavior="scroll" direction="left" scrollamount="5">
+            ⭐ Welcome to the ULTIMATE warehouse management system! ⭐ Now with MORE features! ⭐ Best viewed with Netscape Navigator 4.0! ⭐
+        </marquee>
+    </div>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash flash-{{ category }}">
+                            {% if category == 'success' %}✅{% elif category == 'error' %}❌{% else %}⚠️{% endif %}
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer>
+        <p class="guestbook">
+            📧 <span class="email-link">webmaster@warehouse2000.geocities.com</span> 📧
+        </p>
+        <p>
+            <span class="gif-decoration">🔥</span>
+            <span class="blink sparkle">★ Site best viewed at 800x600 resolution ★</span>
+            <span class="gif-decoration">🔥</span>
+        </p>
+        <p class="counter">Visitors: {{ range(1000, 9999) | random }}</p>
+        <p style="font-size: 12px; color: #666666;">
+            © 2000 Warehouse Manager Inc. | Made with 💖 and dial-up internet
+        </p>
+    </footer>
+</body>
+</html>

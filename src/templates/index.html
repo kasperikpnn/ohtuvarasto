@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Warehouse Manager 2000 - Home{% endblock %}
+
+{% block content %}
+<h2>📦 Your Warehouses 📦</h2>
+
+<div class="under-construction">
+    <span class="gif-decoration">🚧</span>
+    <span style="color: #ff0000; font-weight: bold;">HOT! NEW FEATURE: Multiple Warehouses!</span>
+    <span class="gif-decoration">🚧</span>
+</div>
+
+<p style="text-align: center;">
+    <a href="{{ url_for('create_warehouse') }}" class="btn btn-success">✨ Create New Warehouse ✨</a>
+</p>
+
+{% if warehouses %}
+<table>
+    <thead>
+        <tr>
+            <th>🏷️ Name</th>
+            <th>📊 Current Stock</th>
+            <th>📐 Capacity</th>
+            <th>📈 Fill Level</th>
+            <th>🔧 Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for warehouse_id, warehouse in warehouses.items() %}
+        <tr>
+            <td><strong>{{ warehouse.name }}</strong></td>
+            <td>{{ "%.2f"|format(warehouse.varasto.saldo) }}</td>
+            <td>{{ "%.2f"|format(warehouse.varasto.tilavuus) }}</td>
+            <td>
+                {% set fill_percent = (warehouse.varasto.saldo / warehouse.varasto.tilavuus * 100) if warehouse.varasto.tilavuus > 0 else 0 %}
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{ fill_percent }}%;"></div>
+                </div>
+                <small>{{ "%.1f"|format(fill_percent) }}% full</small>
+            </td>
+            <td>
+                <a href="{{ url_for('view_warehouse', warehouse_id=warehouse_id) }}" class="btn btn-primary">👁️ View</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div style="text-align: center; padding: 40px; background-color: #ffffcc; border: 3px dashed #ff9900; margin: 20px 0;">
+    <p style="font-size: 24px; color: #ff0000;">
+        <span class="blink">⚠️</span> No warehouses yet! <span class="blink">⚠️</span>
+    </p>
+    <p style="color: #000080;">Click the button above to create your first warehouse!</p>
+    <p>
+        <span class="gif-decoration">📦</span>
+        <span class="gif-decoration">📦</span>
+        <span class="gif-decoration">📦</span>
+    </p>
+</div>
+{% endif %}
+
+<div style="text-align: center; margin-top: 30px; padding: 15px; background-color: #e6e6fa; border: 2px solid #9370db;">
+    <p style="font-size: 18px; color: #4b0082;">
+        💡 <strong>TIP:</strong> You can add and remove items from each warehouse!
+    </p>
+</div>
+{% endblock %}
